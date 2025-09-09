@@ -37,9 +37,17 @@ def login_view(request):
         if user is not None:
             login(request, user)
 
-            if not Namoz.objects.filter(user=user).exists():
-                return redirect('setup_qazo')
-
+            Namoz.objects.get_or_create(
+                user=user,
+                defaults={
+                    "bomdod": 0,
+                    "peshin": 0,
+                    "asr": 0,
+                    "shom": 0,
+                    "xufton": 0,
+                    "vitr": 0,
+                }
+            )
             return redirect('home')
         else:
             messages.error(request, "Username yoki parol xato!")
