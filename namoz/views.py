@@ -9,8 +9,17 @@ import pytz
 # Create your views here.
 @login_required
 def home(request):
-    namoz = Namoz.objects.get(user=request.user)
-    qazo = {
+    namoz, created = Namoz.objects.get_or_create(
+        user=request.user,
+        defaults={'bomdod': 0, 'peshin': 0, 'asr': 0, 'shom': 0, 'xufton': 0, 'vitr':0}
+    )
+
+    # Faqat shu userning oxirgi 20 ta amalini olish
+    from .models import NamozAction
+    actions = NamozAction.objects.filter(user=request.user).order_by('-created_at')[:20]
+
+    # Namoz obyektini dictionaryga aylantiramiz
+    qazo_dict = {
         "bomdod": namoz.bomdod,
         "peshin": namoz.peshin,
         "asr": namoz.asr,
@@ -19,18 +28,20 @@ def home(request):
         "vitr": namoz.vitr,
     }
 
-    # Faqat shu userning oxirgi 20 ta amalini olish
-    from .models import NamozAction
-    actions = NamozAction.objects.filter(user=request.user).order_by('-created_at')[:20]
-
-    return render(request, "namoz/home.html", {"qazo": qazo, "actions": actions})
+    return render(request, "namoz/home.html", {"qazo": qazo_dict, "actions": actions})
 
 @login_required
 def setup_qazo(request):
-    try:
-        namoz = Namoz.objects.get(user=request.user)
-    except Namoz.DoesNotExist:
-        namoz = None
+    namoz, created = Namoz.objects.get_or_create(
+        user=request.user,  # foydalanuvchiga bog'lash
+        defaults={
+            'bomdod': 0,
+            'peshin': 0,
+            'asr': 0,
+            'shom': 0,
+            'xufton': 0,
+        }
+    )
 
     if request.method == "POST":
         form = NamozForm(request.POST, instance = namoz)

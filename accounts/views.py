@@ -22,6 +22,18 @@ def signup(request):
 
         user = User.objects.create_user(username=username, email=email, password=password)
         user.save()
+
+        from namoz.models import Namoz
+        Namoz.objects.create(
+            user=user,
+            bomdod=0,
+            peshin=0,
+            asr=0,
+            shom=0,
+            xufton=0,
+            vitr=0
+        )
+
         messages.success(request, "Muvaffaqiyatli ro'yxatdan o'tdingiz!")
         return redirect('setup_qazo')
 
