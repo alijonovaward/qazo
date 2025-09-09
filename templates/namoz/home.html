@@ -4,50 +4,152 @@
     <meta charset="UTF-8">
     <title>Qazo Namozlar</title>
     <style>
+        /* Mobil va kichik ekranlar uchun responsive */
+@media (max-width: 768px) {
+    .prayer-row {
+        padding: 15px 20px; /* kattaroq joy */
+        font-size: 18px;    /* matn kattaroq */
+    }
+
+    .prayer-row span#bomdod,
+    .prayer-row span#peshin,
+    .prayer-row span#asr,
+    .prayer-row span#shom,
+    .prayer-row span#xufton,
+    .prayer-row span#vitr {
+        width: 60px;         /* 6 xonali raqamlar sig‘adi */
+        text-align: right;
+        margin: 0 5px;
+    }
+
+    ul {
+        margin-top: 30px;    /* tarixni pastroqqa surish */
+    }
+
+    button {
+        padding: 10px 16px;  /* tugmalar kattaroq */
+        font-size: 18px;
+    }
+}
+
         body {
+            background-color: #f0f2f5;
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
         }
+
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
         h2, h3 {
-            margin-top: 20px;
+            margin-top: 0;
+            text-align: center;
         }
+
+        a {
+            color: #007BFF;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .top-links {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
         .prayer-row {
-            margin: 10px 0;
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f9f9f9;
+            padding: 10px 15px;
+            border-radius: 8px;
         }
+
         .prayer-row span {
-            display: inline-block;
-            width: 100px;
+            font-size: 16px;
+            font-weight: bold;
+            min-width: 100px;
         }
+
         button {
-            padding: 5px 10px;
+            padding: 8px 14px;
             margin: 0 5px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
         }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .btn-minus {
+            background-color: #dc3545;
+        }
+
+        .btn-plus {
+            background-color: #007BFF;
+        }
+
         ul {
             list-style: none;
             padding: 0;
+            margin-top: 15px;
         }
+
         ul li {
             background: #f5f5f5;
-            margin: 5px 0;
-            padding: 8px;
-            border-radius: 5px;
+            margin: 6px 0;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
         }
+
         .timestamp {
             font-size: 12px;
             color: gray;
+            float: right;
         }
     </style>
 </head>
 <body>
-    <h2>Qazo namozlaringiz</h2>
+<div class="container">
+    <h2>Assalomu alaykum, {{ request.user.username }}</h2>
+    <div class="top-links">
+        <a href="{% url 'setup_qazo' %}">Boshidan sozlash</a> |
+        <a href="{% url 'logout' %}">Chiqish</a>
+    </div>
+
+    <h3>Qazo namozlaringiz</h3>
 
     {% for prayer, value in qazo.items %}
       <div class="prayer-row">
-        <span>{{ prayer|title }}:</span>
-        <button onclick="updateQazo('{{ prayer }}', '-')">-</button>
-        <span id="{{ prayer }}">{{ value }}</span>
-        <button onclick="updateQazo('{{ prayer }}', '+')">+</button>
-      </div>
+    <span>{{ prayer|title }}</span>
+    <div style="display: flex; align-items: center;">
+        <button class="btn-minus" onclick="updateQazo('{{ prayer }}', '-')">-</button>
+        <span id="{{ prayer }}" style="display: inline-block; width: 60px; text-align: right; margin: 0 5px;">{{ value }}</span>
+        <button class="btn-plus" onclick="updateQazo('{{ prayer }}', '+')">+</button>
+    </div>
+</div>
+
     {% endfor %}
 
     <hr>
@@ -65,8 +167,9 @@
         <li>Hozircha tarix yo‘q</li>
       {% endfor %}
     </ul>
+</div>
 
-    <script>
+<script>
 function updateQazo(prayer, action) {
     fetch("{% url 'update_qazo' %}", {
         method: "POST",
@@ -79,10 +182,8 @@ function updateQazo(prayer, action) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Sonni yangilash
             document.getElementById(prayer).innerText = data.new_value;
 
-            // Tarixni yangilash
             const ul = document.querySelector("ul");
             ul.innerHTML = "";
             data.actions.forEach(a => {

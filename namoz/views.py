@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import NamozForm
 from .models import Namoz
+from django.utils import timezone
+import pytz
 
 # Create your views here.
 @login_required
@@ -63,6 +65,8 @@ def update_qazo(request):
         namoz.save()
         new_val = getattr(namoz, prayer)
 
+        TASHKENT_TZ = pytz.timezone('Asia/Tashkent')
+
         # Tarixga yozamiz
         from .models import NamozAction
         NamozAction.objects.create(
@@ -83,7 +87,7 @@ def update_qazo(request):
                 "action": a.action,
                 "old_value": a.old_value,
                 "new_value": a.new_value,
-                "created_at": a.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                "created_at": a.created_at.astimezone(TASHKENT_TZ).strftime("%Y-%m-%d %H:%M:%S"),
             }
             for a in actions
         ]
