@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Qazo Namozlar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h2, h3 {
+            margin-top: 20px;
+        }
+        .prayer-row {
+            margin: 10px 0;
+        }
+        .prayer-row span {
+            display: inline-block;
+            width: 100px;
+        }
+        button {
+            padding: 5px 10px;
+            margin: 0 5px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            background: #f5f5f5;
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        .timestamp {
+            font-size: 12px;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+    <h2>Qazo namozlaringiz</h2>
+
+    {% for prayer, value in qazo.items %}
+      <div class="prayer-row">
+        <span>{{ prayer|title }}:</span>
+        <button onclick="updateQazo('{{ prayer }}', '-')">-</button>
+        <span id="{{ prayer }}">{{ value }}</span>
+        <button onclick="updateQazo('{{ prayer }}', '+')">+</button>
+      </div>
+    {% endfor %}
+
+    <hr>
+
+    <h3>Oxirgi 20 ta amal tarixi</h3>
+    <ul>
+      {% for action in actions %}
+        <li>
+          <b>{{ action.prayer|title }}</b>
+          ({{ action.action }})
+          {{ action.old_value }} → {{ action.new_value }}
+          <span class="timestamp">{{ action.created_at|date:"Y-m-d H:i:s" }}</span>
+        </li>
+      {% empty %}
+        <li>Hozircha tarix yo‘q</li>
+      {% endfor %}
+    </ul>
+
+    <script>
+function updateQazo(prayer, action) {
+    fetch("{% url 'update_qazo' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "prayer=" + encodeURIComponent(prayer) + "&action=" + encodeURIComponent(action)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Sonni yangilash
+            document.getElementById(prayer).innerText = data.new_value;
+
+            // Tarixni yangilash
+            const ul = document.querySelector("ul");
+            ul.innerHTML = "";
+            data.actions.forEach(a => {
+                ul.innerHTML += `
+                    <li>
+                        <b>${a.prayer}</b> (${a.action})
+                        ${a.old_value} → ${a.new_value}
+                        <span class="timestamp">${a.created_at}</span>
+                    </li>
+                `;
+            });
+        }
+    });
+}
+</script>
+
+</body>
+</html>

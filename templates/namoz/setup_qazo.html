@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Qazo Sozlash</title>
+</head>
+<body>
+    <h1>Boshlang‘ich qazo sonlarini kiriting</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Saqlash</button>
+    </form>
+
+    <p><a href="{% url 'home' %}">Orqaga</a></p>
+</body>
+</html>
