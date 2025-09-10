@@ -2,36 +2,9 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Mobilga mos -->
     <title>Qazo Namozlar</title>
     <style>
-        /* Mobil va kichik ekranlar uchun responsive */
-@media (max-width: 768px) {
-    .prayer-row {
-        padding: 15px 20px; /* kattaroq joy */
-        font-size: 18px;    /* matn kattaroq */
-    }
-
-    .prayer-row span#bomdod,
-    .prayer-row span#peshin,
-    .prayer-row span#asr,
-    .prayer-row span#shom,
-    .prayer-row span#xufton,
-    .prayer-row span#vitr {
-        width: 60px;         /* 6 xonali raqamlar sig‘adi */
-        text-align: right;
-        margin: 0 5px;
-    }
-
-    ul {
-        margin-top: 30px;    /* tarixni pastroqqa surish */
-    }
-
-    button {
-        padding: 10px 16px;  /* tugmalar kattaroq */
-        font-size: 18px;
-    }
-}
-
         body {
             background-color: #f0f2f5;
             font-family: Arial, sans-serif;
@@ -46,8 +19,9 @@
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-            max-width: 600px;
             width: 100%;
+            max-width: 600px; /* kompyuterda juda keng chiqib ketmasin */
+            box-sizing: border-box;
         }
 
         h2, h3 {
@@ -70,29 +44,41 @@
             margin-bottom: 20px;
         }
 
+        /* --- Qatorlar --- */
         .prayer-row {
             margin: 12px 0;
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr auto; /* chapda nom, o‘ngda tugmalar */
             align-items: center;
-            justify-content: space-between;
             background: #f9f9f9;
-            padding: 10px 15px;
+            padding: 12px 16px;
             border-radius: 8px;
         }
 
-        .prayer-row span {
-            font-size: 16px;
+        .prayer-row span.name {
+            font-size: 18px;
             font-weight: bold;
-            min-width: 100px;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* tugma va son orasida bo‘sh joy */
+        }
+
+        .controls span {
+            font-size: 18px;
+            font-weight: bold;
+            width: 70px;
+            text-align: center;
         }
 
         button {
             padding: 8px 14px;
-            margin: 0 5px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
             color: #fff;
         }
@@ -128,6 +114,24 @@
             color: gray;
             float: right;
         }
+
+        /* --- Telefon uchun qo‘shimcha responsive --- */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            .prayer-row {
+                grid-template-columns: 1fr; /* nom va tugmalar ustma-ust chiqadi */
+                gap: 8px;
+            }
+            .controls {
+                justify-content: space-between;
+                width: 100%;
+            }
+            .controls span {
+                flex: 1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -142,14 +146,13 @@
 
     {% for prayer, value in qazo.items %}
       <div class="prayer-row">
-    <span>{{ prayer|title }}</span>
-    <div style="display: flex; align-items: center;">
-        <button class="btn-minus" onclick="updateQazo('{{ prayer }}', '-')">-</button>
-        <span id="{{ prayer }}" style="display: inline-block; width: 60px; text-align: right; margin: 0 5px;">{{ value }}</span>
-        <button class="btn-plus" onclick="updateQazo('{{ prayer }}', '+')">+</button>
-    </div>
-</div>
-
+        <span class="name">{{ prayer|title }}</span>
+        <div class="controls">
+            <button class="btn-minus" onclick="updateQazo('{{ prayer }}', '-')">-</button>
+            <span id="{{ prayer }}">{{ value }}</span>
+            <button class="btn-plus" onclick="updateQazo('{{ prayer }}', '+')">+</button>
+        </div>
+      </div>
     {% endfor %}
 
     <hr>
