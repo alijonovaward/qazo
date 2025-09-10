@@ -2,6 +2,7 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ✅ Responsiveness uchun -->
     <title>Qazo Sozlash</title>
     <style>
         body {
@@ -10,23 +11,25 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh; /* ✅ kichik ekranda ham to‘liq balandlik */
             margin: 0;
+            padding: 15px; /* ✅ telefonda chetlari yopishib qolmasin */
         }
 
         .form-container {
             background: #ffffff;
-            padding: 30px;
+            padding: 25px;
             border-radius: 12px;
             box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 400px;
+            max-width: 420px; /* ✅ kompyuterda keng, telefonda tor bo‘ladi */
             text-align: center;
         }
 
         h1 {
             font-size: 22px;
             margin-bottom: 20px;
+            color: #333;
         }
 
         form {
@@ -35,17 +38,18 @@
         }
 
         form p {
-            margin: 10px 0;
+            margin: 12px 0;
         }
 
         input {
             width: 100%;
-            padding: 10px;
-            margin-top: 5px;
+            padding: 12px;
+            margin-top: 6px;
             border: 1px solid #ddd;
             border-radius: 8px;
             box-sizing: border-box;
-            font-size: 14px;
+            font-size: 15px;
+            transition: border 0.2s;
         }
 
         input:focus {
@@ -55,14 +59,16 @@
 
         button {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             background-color: #007BFF;
             border: none;
             border-radius: 8px;
             color: white;
             font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
-            margin-top: 15px;
+            margin-top: 18px;
+            transition: background 0.3s;
         }
 
         button:hover {
@@ -74,10 +80,28 @@
             margin-top: 15px;
             color: #007BFF;
             text-decoration: none;
+            font-size: 14px;
         }
 
         a:hover {
             text-decoration: underline;
+        }
+
+        /* 📱 Telefon uchun optimallashtirish */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 18px;
+            }
+
+            input {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            button {
+                font-size: 15px;
+                padding: 12px;
+            }
         }
     </style>
 </head>
@@ -90,6 +114,8 @@
             {{ form.as_p }}
             <button type="submit">Saqlash</button>
         </form>
+
+        <a href="{% url 'home' %}">⬅ Orqaga</a> <!-- ✅ foydalanuvchi ortga qaytishi uchun qo‘shdim -->
     </div>
 </body>
 </html>
