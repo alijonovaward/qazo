@@ -10,5 +10,8 @@ def friends(request):
 
 def get_followers(request):
     user = request.user
-    follows = user.follows.all()
-    return render(request, 'follow/userlist.html', {'users':follows})
+    followers_users = User.objects.filter(
+        following__following=user,
+        following__status='accepted'
+    )
+    return render(request, 'follow/userlist.html', {'users':followers_users})
