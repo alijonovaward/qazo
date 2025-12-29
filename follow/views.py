@@ -11,7 +11,9 @@ def friends(request):
 def get_followers(request):
     user = request.user
 
-    followers = user.followers.filter(status='accepted')
-    followers_users = [f.follower for f in followers]
+    followers_users = [
+        f.follower
+        for f in user.followers.filter(status='accepted')
+    ]
 
     return render(request, 'follow/userlist.html', {'users':followers_users})
