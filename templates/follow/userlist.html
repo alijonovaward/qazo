@@ -6,6 +6,7 @@
 </head>
 <body>
     <h1>Foydalanuvchilar sahifasi</h1>
+    <a href="{% url 'followers' %}">Padpiscik 😂</a>
     {% for user in users %}
     <p>{{ user.username }}</p>
     {% endfor %}

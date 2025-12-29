@@ -7,3 +7,8 @@ def friends(request):
 
     context = {'users':users}
     return render(request, 'follow/userlist.html', context)
+
+def get_followers(request):
+    user = request.user
+    follows = user.follows.all()
+    return render(request, 'follow/userlist.html', {'users':follows})
