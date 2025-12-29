@@ -15,7 +15,7 @@ def get_followers(request):
         f.follower
         for f in user.followers.filter(status='accepted')
     ]
-    print(followers_users)
+
     context = {'users':followers_users}
 
     return render(request, 'follow/userlist.html', context)
