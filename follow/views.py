@@ -1,5 +1,9 @@
 from django.shortcuts import render
+from django.contrib.auth.models import User
 
 # Create your views here.
 def friends(request):
-    return render(request, 'follow/userlist.html')
+    users = User.objects.all()
+
+    context = {'users':users}
+    return render(request, 'follow/userlist.html', context)
