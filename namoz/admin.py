@@ -2,7 +2,10 @@ from django.contrib import admin
 from .models import Namoz, NamozAction
 
 # Register your models here.
-admin.site.register(Namoz)
+@admin.register(Namoz)
+class NamozAdmin(admin.ModelAdmin):
+    search_fields = ('user',)
+    list_display = ('user', 'bomdod', 'peshin', 'asr', 'shom', 'xufton', 'vitr')
 
 @admin.register(NamozAction)
 class NamozActionAdmin(admin.ModelAdmin):
