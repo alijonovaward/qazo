@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('', include('namoz.urls')),
+    path('friends/', include('follow.urls')),
 ]
 
 if settings.DEBUG:
