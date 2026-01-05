@@ -6,7 +6,7 @@ from .models import Permission
 def friends(request):
     users = User.objects.all()
 
-    context = {'users':users}
+    context = {'users':users, 'followers':False}
     return render(request, 'follow/userlist.html', context)
 
 def get_followers(request):
