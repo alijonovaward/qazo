@@ -143,12 +143,42 @@
     {% else %}
         <!-- Followers False bo'lsa: faqat username list -->
         <ul class="user-list">
-            {% for user in users %}
-                <li>{{ user.username }}</li>
-            {% empty %}
-                <li>Foydalanuvchilar topilmadi</li>
-            {% endfor %}
-        </ul>
+    {% for user in users %}
+        <li>
+            {{ user.username }}
+
+            {% comment %}Permissionni tekshiramiz{% endcomment %}
+            {% with perms=permissions %}
+                {% with perm_found=False %}
+                    {% for perm in perms %}
+                        {% if perm.receiver.id == user.id %}
+                            {% if perm.status == "accepted" %}
+                                <form method="POST" action="{% url 'unfollow_user' user.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit">Unfollow</button>
+                                </form>
+                                {% with perm_found=True %}{% endwith %}
+                            {% elif perm.status == "pending" %}
+                                <button disabled>Pending</button>
+                                {% with perm_found=True %}{% endwith %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if not perm_found %}
+                        <form method="POST" action="{% url 'follow_user' user.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit">Follow</button>
+                        </form>
+                    {% endif %}
+                {% endwith %}
+            {% endwith %}
+        </li>
+    {% empty %}
+        <li>Foydalanuvchilar topilmadi</li>
+    {% endfor %}
+</ul>
+
     {% endif %}
 
 </div>
