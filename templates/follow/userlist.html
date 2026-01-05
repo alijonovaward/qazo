@@ -6,9 +6,7 @@
     <title>Foydalanuvchilar sahifasi</title>
 
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -24,7 +22,7 @@
         .container {
             background: #ffffff;
             width: 100%;
-            max-width: 420px;
+            max-width: 800px;
             padding: 20px;
             border-radius: 14px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
@@ -37,6 +35,15 @@
             font-size: 22px;
         }
 
+        a {
+            display: inline-block;
+            margin-bottom: 15px;
+            text-decoration: none;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        /* USERNAME LIST STYLE */
         .user-list {
             list-style: none;
             padding: 0;
@@ -53,49 +60,98 @@
             transition: 0.25s ease;
         }
 
-        .user-list li:active {
-            background: #667eea;
-            color: #fff;
-        }
-
+        .user-list li:active,
         .user-list li:hover {
             background: #667eea;
             color: #fff;
         }
 
-        /* 📱 KICHIK EKRANLAR */
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 20px;
-            }
+        /* TABLE STYLE */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
 
-            .user-list li {
-                font-size: 15px;
-                padding: 16px;
-            }
+        .user-table {
+            width: 100%;
+            min-width: 700px;
+            border-collapse: collapse;
+        }
+
+        .user-table th,
+        .user-table td {
+            border: 1px solid #e5e7eb;
+            padding: 8px 12px;
+            text-align: center;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .user-table th { background: #f3f4f6; font-weight: 600; }
+        .user-table tr:nth-child(even) { background-color: #f9fafb; }
+        .user-table tr:hover { background-color: #667eea; color: #fff; }
+
+        /* MOBIL MOSLASHUV */
+        @media (max-width: 600px) {
+            h1 { font-size: 20px; }
+            .user-table th, .user-table td { padding: 6px 8px; font-size: 12px; }
+            a { font-size: 14px; }
+            .user-list li { font-size: 14px; padding: 12px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Foydalanuvchilar</h1>
-        <a href="{% url 'followers' %}">Followers</a>
-        <h1>Following</h1>
+<div class="container">
+    <h1>Foydalanuvchilar</h1>
+    <a href="{% url 'followers' %}">Followers</a>
+
+    {% if followers %}
+        <!-- Followers True bo'lsa: jadval -->
+        <div class="table-wrapper">
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>Foydalanuvchi</th>
+                        <th>Bomdod</th>
+                        <th>Peshin</th>
+                        <th>Asr</th>
+                        <th>Shom</th>
+                        <th>Xufton</th>
+                        <th>Vitr</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{% if user.namoz %}{{ user.namoz.bomdod|add:"0" }}{% else %}0{% endif %}</td>
+                            <td>{% if user.namoz %}{{ user.namoz.peshin|add:"0" }}{% else %}0{% endif %}</td>
+                            <td>{% if user.namoz %}{{ user.namoz.asr|add:"0" }}{% else %}0{% endif %}</td>
+                            <td>{% if user.namoz %}{{ user.namoz.shom|add:"0" }}{% else %}0{% endif %}</td>
+                            <td>{% if user.namoz %}{{ user.namoz.xufton|add:"0" }}{% else %}0{% endif %}</td>
+                            <td>{% if user.namoz %}{{ user.namoz.vitr|add:"0" }}{% else %}0{% endif %}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7">Foydalanuvchilar topilmadi</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <!-- Followers False bo'lsa: faqat username list -->
         <ul class="user-list">
             {% for user in users %}
-                {% if followers %}
-                    <li>{{ user.username }} {{user.namoz.bomdod}} {{user.namoz.peshin}}
-                        {{user.namoz.asr}} {{user.namoz.shom}}
-                        {{user.namoz.xufton}} {{user.namoz.vitr}}</li>
-                {% else %}
-                    <li>{{ user.username }}</li>
-                {% endif %}
+                <li>{{ user.username }}</li>
             {% empty %}
                 <li>Foydalanuvchilar topilmadi</li>
             {% endfor %}
         </ul>
-    </div>
+    {% endif %}
+
+</div>
 
 </body>
 </html>
