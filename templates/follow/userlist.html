@@ -85,7 +85,9 @@
         <ul class="user-list">
             {% for user in users %}
                 {% if followers %}
-                    <li>{{ user.username }} {{user.namoz.bomdod}}</li>
+                    <li>{{ user.username }} {{user.namoz.bomdod}} {{user.namoz.peshin}}
+                        {{user.namoz.asr}} {{user.namoz.shom}}
+                        {{user.namoz.xufton}} {{user.namoz.vitr}}</li>
                 {% else %}
                     <li>{{ user.username }}</li>
                 {% endif %}
