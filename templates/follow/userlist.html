@@ -84,7 +84,7 @@
         <h1>Following</h1>
         <ul class="user-list">
             {% for user in users %}
-                {% if followers == true %}
+                {% if followers %}
                     <li>{{ user.username }} {{user.namoz.bomdod}}</li>
                 {% else %}
                     <li>{{ user.username }}</li>
