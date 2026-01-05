@@ -2,31 +2,39 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Foydalanuvchilar sahifasi</title>
+
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
-            padding: 0;
             font-family: "Segoe UI", Tahoma, sans-serif;
             background: linear-gradient(135deg, #667eea, #764ba2);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 15px;
         }
 
         .container {
             background: #ffffff;
-            width: 400px;
-            padding: 25px 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
 
         h1 {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             color: #333;
+            font-size: 22px;
         }
 
         .user-list {
@@ -38,18 +46,33 @@
         .user-list li {
             background: #f4f6fb;
             margin-bottom: 10px;
-            padding: 12px 15px;
-            border-radius: 8px;
+            padding: 14px 16px;
+            border-radius: 10px;
             font-size: 16px;
-            color: #444;
-            transition: all 0.3s ease;
-            cursor: pointer;
+            color: #333;
+            transition: 0.25s ease;
+        }
+
+        .user-list li:active {
+            background: #667eea;
+            color: #fff;
         }
 
         .user-list li:hover {
             background: #667eea;
             color: #fff;
-            transform: translateX(5px);
+        }
+
+        /* 📱 KICHIK EKRANLAR */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            .user-list li {
+                font-size: 15px;
+                padding: 16px;
+            }
         }
     </style>
 </head>
@@ -62,7 +85,7 @@
             {% for user in users %}
                 <li>{{ user.username }}</li>
             {% empty %}
-                <li>Hozircha foydalanuvchilar yo‘q</li>
+                <li>Foydalanuvchilar topilmadi</li>
             {% endfor %}
         </ul>
     </div>
