@@ -1,13 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
 <head>
     <meta charset="UTF-8">
     <title>Foydalanuvchilar sahifasi</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: #ffffff;
+            width: 400px;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .user-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .user-list li {
+            background: #f4f6fb;
+            margin-bottom: 10px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #444;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .user-list li:hover {
+            background: #667eea;
+            color: #fff;
+            transform: translateX(5px);
+        }
+    </style>
 </head>
 <body>
-    <h1>Foydalanuvchilar sahifasi</h1>
-    {% for user in users %}
-    <p>{{ user.username }}</p>
-    {% endfor %}
+
+    <div class="container">
+        <h1>Foydalanuvchilar</h1>
+
+        <ul class="user-list">
+            {% for user in users %}
+                <li>{{ user.username }}</li>
+            {% empty %}
+                <li>Hozircha foydalanuvchilar yo‘q</li>
+            {% endfor %}
+        </ul>
+    </div>
+
 </body>
 </html>
