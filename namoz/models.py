@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class Namoz(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='namoz')
     bomdod = models.PositiveIntegerField(default=0)
     peshin = models.PositiveIntegerField(default=0)
     asr = models.PositiveIntegerField(default=0)

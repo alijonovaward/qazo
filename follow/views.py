@@ -13,6 +13,6 @@ def get_followers(request):
     permissions = Permission.objects.filter(receiver=request.user)
     users = [p.sender for p in permissions]
 
-    context = {'users':users}
+    context = {'users':users, 'followers':True}
 
     return render(request, 'follow/userlist.html', context)
