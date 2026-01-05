@@ -80,7 +80,8 @@
 
     <div class="container">
         <h1>Foydalanuvchilar</h1>
-
+        <a href="{% url 'followers' %}">Followers</a>
+        <h1>Following</h1>
         <ul class="user-list">
             {% for user in users %}
                 <li>{{ user.username }}</li>
