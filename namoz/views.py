@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import NamozForm
-from .models import Namoz
+from .models import Namoz, NamozAction
 from django.utils import timezone
 import pytz
 
@@ -110,3 +110,26 @@ def update_qazo(request):
         })
 
     return JsonResponse({"success": False})
+
+@login_required
+def namoz_total_chart(request):
+    TASHKENT_TZ = pytz.timezone('Asia/Tashkent')
+
+    # Faqat o‘sha userning actionlarini vaqt bo‘yicha oling
+    actions = NamozAction.objects.filter(user=request.user).order_by('created_at')
+    namoz = Namoz.objects.get(user=request.user)
+
+    total = namoz.bomdod + namoz.peshin + namoz.asr + namoz.shom + namoz.vitr + namoz.xufton
+    chart_data = []
+
+    for a in actions:
+        # Oxirgi qazo sonini hisoblash
+        # action '+' bo'lsa +1, '-' bo'lsa -1
+        total += a.new_value - a.old_value
+
+        chart_data.append({
+            "time": a.created_at.astimezone(TASHKENT_TZ).strftime("%Y-%m-%d %H:%M:%S"),
+            "total": total
+        })
+
+    return JsonResponse(chart_data, safe=False)

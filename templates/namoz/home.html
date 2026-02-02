@@ -20,7 +20,7 @@
             border-radius: 12px;
             box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 600px; /* kompyuterda juda keng chiqib ketmasin */
+            max-width: 600px;
             box-sizing: border-box;
         }
 
@@ -48,7 +48,7 @@
         .prayer-row {
             margin: 12px 0;
             display: grid;
-            grid-template-columns: 1fr auto; /* chapda nom, o‘ngda tugmalar */
+            grid-template-columns: 1fr auto;
             align-items: center;
             background: #f9f9f9;
             padding: 12px 16px;
@@ -63,7 +63,7 @@
         .controls {
             display: flex;
             align-items: center;
-            gap: 10px; /* tugma va son orasida bo‘sh joy */
+            gap: 10px;
         }
 
         .controls span {
@@ -115,13 +115,21 @@
             float: right;
         }
 
+        /* Grafik konteyneri */
+        .chart-container {
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            margin: 20px auto;
+        }
+
         /* --- Telefon uchun qo‘shimcha responsive --- */
         @media (max-width: 480px) {
             .container {
                 padding: 20px;
             }
             .prayer-row {
-                grid-template-columns: 1fr; /* nom va tugmalar ustma-ust chiqadi */
+                grid-template-columns: 1fr;
                 gap: 8px;
             }
             .controls {
@@ -159,7 +167,7 @@
     <hr>
 
     <h3>Oxirgi 20 ta amal tarixi</h3>
-    <ul>
+    <ul id="action-list">
       {% for action in actions %}
         <li>
           <b>{{ action.prayer|title }}</b>
@@ -171,6 +179,11 @@
         <li>Hozircha tarix yo‘q</li>
       {% endfor %}
     </ul>
+
+    <h3>Jami Qazolar Grafigi</h3>
+    <div class="chart-container">
+        <canvas id="totalNamozChart"></canvas>
+    </div>
 </div>
 
 <script>
@@ -188,7 +201,7 @@ function updateQazo(prayer, action) {
         if (data.success) {
             document.getElementById(prayer).innerText = data.new_value;
 
-            const ul = document.querySelector("ul");
+            const ul = document.getElementById("action-list");
             ul.innerHTML = "";
             data.actions.forEach(a => {
                 ul.innerHTML += `
@@ -199,10 +212,91 @@ function updateQazo(prayer, action) {
                     </li>
                 `;
             });
+
+            // Grafikni ham yangilash
+            updateChart();
         }
     });
 }
+
+function updateChart() {
+    fetch("{% url 'namoz_total_chart' %}")
+      .then(res => res.json())
+      .then(data => {
+        const labels = data.map(item => item.time);
+        const totals = data.map(item => item.total);
+
+        if (window.totalChart) {
+            // Agar chart mavjud bo‘lsa, faqat data yangilaymiz
+            window.totalChart.data.labels = labels;
+            window.totalChart.data.datasets[0].data = totals;
+            window.totalChart.update();
+        } else {
+            const ctx = document.getElementById('totalNamozChart').getContext('2d');
+            window.totalChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Jami Qazolar',
+                        data: totals,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                        fill: false,
+                        tension: 0.2,
+                        pointRadius: 3,
+                        pointHoverRadius: 5,
+                    }]
+                },
+
+                options: {
+
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    },
+                    scales: {
+    x: {
+        display: true,
+        title: { display: true, text: 'Vaqt' },
+        ticks: { maxRotation: 45, minRotation: 0 }
+    },
+    y: {
+        type: 'logarithmic', // <- linear o‘qni log o‘q bilan almashtirdik
+        display: true,
+        title: { display: true, text: 'Jami Qazo' },
+        beginAtZero: false, // log o‘qda 0 bo‘lmaydi
+        ticks: {
+            callback: function(value) {
+                return value.toLocaleString(); // katta sonlarni formatlash
+            }
+        }
+    }
+}
+
+                }
+            });
+        }
+      });
+}
+
+// Sahifa yuklanganda grafikni chaqiramiz
+document.addEventListener("DOMContentLoaded", updateChart);
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
