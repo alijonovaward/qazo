@@ -1,8 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ chart_user.username }} - Namoz statistikasi</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+
+        ul li {
+            background: #f5f5f5;
+            margin: 6px 0;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
 
@@ -12,7 +28,19 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <canvas id="myChart"></canvas>
-
+<h3>Oxirgi 10 ta amal tarixi</h3>
+    <ul id="action-list">
+      {% for action in actions %}
+        <li>
+          <b>{{ action.prayer|title }}</b>
+          ({{ action.action }})
+          {{ action.old_value }} → {{ action.new_value }}
+          <span class="timestamp">{{ action.created_at|date:"Y-m-d H:i:s" }}</span>
+        </li>
+      {% empty %}
+        <li>Hozircha tarix yo‘q</li>
+      {% endfor %}
+    </ul>
 <script>
 fetch("{% url 'namoz_total_chart_follow' chart_user.id %}")
 .then(response => response.json())

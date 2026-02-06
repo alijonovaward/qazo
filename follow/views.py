@@ -70,4 +70,10 @@ def namoz_total_chart_follow(request, user_id):
 @login_required
 def chart_page(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    return render(request, "follow/chart.html", {"chart_user": user})
+    actions = NamozAction.objects.filter(user=user).order_by('-created_at')[:10]
+
+    context = {
+        "chart_user": user,
+        'actions': actions,
+    }
+    return render(request, "follow/chart.html", context)
