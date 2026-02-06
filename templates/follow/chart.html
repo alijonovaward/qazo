@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ chart_user.username }} - Namoz statistikasi</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<h2>{{ chart_user.username }} namoz progressi</h2>
+<canvas id="myChart"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<canvas id="myChart"></canvas>
+
+<script>
+fetch("{% url 'namoz_total_chart_follow' chart_user.id %}")
+.then(response => response.json())
+.then(data => {
+
+    console.log("DATA:", data); // tekshirish uchun
+
+    const labels = data.map(item => item.time);
+    const totals = data.map(item => item.total);
+
+    new Chart(document.getElementById('myChart'), {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Jami namozlar",
+                data: totals,
+                tension: 0.3,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    ticks: { maxRotation: 90, minRotation: 45 }
+                }
+            }
+        }
+    });
+
+});
+</script>
+
+</body>
+</html>

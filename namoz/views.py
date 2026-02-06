@@ -119,12 +119,10 @@ def namoz_total_chart(request):
     actions = NamozAction.objects.filter(user=request.user).order_by('created_at')
     namoz = Namoz.objects.get(user=request.user)
 
-    total = namoz.bomdod + namoz.peshin + namoz.asr + namoz.shom + namoz.vitr + namoz.xufton
+    total = namoz.bomdod + namoz.peshin + namoz.asr + namoz.shom + namoz.xufton + namoz.vitr
     chart_data = []
 
     for a in actions:
-        # Oxirgi qazo sonini hisoblash
-        # action '+' bo'lsa +1, '-' bo'lsa -1
         total += a.new_value - a.old_value
 
         chart_data.append({

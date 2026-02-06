@@ -123,15 +123,17 @@
                 </thead>
                 <tbody>
                     {% for user in users %}
-                        <tr>
-                            <td>{{ user.username }}</td>
-                            <td>{% if user.namoz %}{{ user.namoz.bomdod|add:"0" }}{% else %}0{% endif %}</td>
-                            <td>{% if user.namoz %}{{ user.namoz.peshin|add:"0" }}{% else %}0{% endif %}</td>
-                            <td>{% if user.namoz %}{{ user.namoz.asr|add:"0" }}{% else %}0{% endif %}</td>
-                            <td>{% if user.namoz %}{{ user.namoz.shom|add:"0" }}{% else %}0{% endif %}</td>
-                            <td>{% if user.namoz %}{{ user.namoz.xufton|add:"0" }}{% else %}0{% endif %}</td>
-                            <td>{% if user.namoz %}{{ user.namoz.vitr|add:"0" }}{% else %}0{% endif %}</td>
-                        </tr>
+
+                            <tr>
+                                <td><a href="{% url 'chart_page' user.pk %}">{{ user.username }}</a></td>
+                                <td>{% if user.namoz %}{{ user.namoz.bomdod|add:"0" }}{% else %}0{% endif %}</td>
+                                <td>{% if user.namoz %}{{ user.namoz.peshin|add:"0" }}{% else %}0{% endif %}</td>
+                                <td>{% if user.namoz %}{{ user.namoz.asr|add:"0" }}{% else %}0{% endif %}</td>
+                                <td>{% if user.namoz %}{{ user.namoz.shom|add:"0" }}{% else %}0{% endif %}</td>
+                                <td>{% if user.namoz %}{{ user.namoz.xufton|add:"0" }}{% else %}0{% endif %}</td>
+                                <td>{% if user.namoz %}{{ user.namoz.vitr|add:"0" }}{% else %}0{% endif %}</td>
+                            </tr>
+
                     {% empty %}
                         <tr>
                             <td colspan="7">Foydalanuvchilar topilmadi</td>
